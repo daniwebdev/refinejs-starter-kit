@@ -9,7 +9,7 @@ export default function Login() {
     <AuthPage
       type="login"
       formProps={{
-        defaultValues: { email: "demo@refine.dev", password: "demodemo" },
+        // defaultValues: { email: "demo@refine.dev", password: "demodemo" },
       }}
     />
   );
@@ -24,15 +24,15 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     "common",
   ]);
 
-  if (authenticated) {
-    return {
-      props: {},
-      redirect: {
-        destination: redirectTo ?? "/",
-        permanent: false,
-      },
-    };
-  }
+  // if (authenticated) {
+  //   return {
+  //     props: {},
+  //     redirect: {
+  //       destination: redirectTo ?? "/",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   return {
     props: {

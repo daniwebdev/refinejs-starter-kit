@@ -159,5 +159,19 @@
   },
   "table": {
     "actions": "Actions"
+  },
+  "users": {
+    "users": "Users",
+    "fields": {
+      "id": "Id",
+      "title": "Title",
+      "createdAt": "Created At"
+    },
+    "titles": {
+      "create": "Create Category",
+      "edit": "Edit Category",
+      "list": "Categories",
+      "show": "Show Category"
+    }
   }
 }

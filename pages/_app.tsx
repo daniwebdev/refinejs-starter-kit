@@ -20,8 +20,10 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 import dataProvider from "@refinedev/simple-rest";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import { authProvider } from "src/authProvider";
+import { customDataProvider } from "src/dataProvider";
 
-const API_URL = "https://api.fake-rest.refine.dev";
+const API_URL = "http://localhost:8611";
+// const API_URL = "https://api.fake-rest.refine.dev";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   noLayout?: boolean;
@@ -52,39 +54,46 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
     getLocale: () => i18n.language,
   };
 
-  return (
-    <>
-      <GitHubBanner />
-      <RefineKbarProvider>
-        <ColorModeContextProvider>
-          <CssBaseline />
-          <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
-          <RefineSnackbarProvider>
-            <DevtoolsProvider>
-              <Refine
-                routerProvider={routerProvider}
-                dataProvider={dataProvider(API_URL)}
-                notificationProvider={notificationProvider}
-                authProvider={authProvider}
-                i18nProvider={i18nProvider}
-                options={{
-                  syncWithLocation: true,
-                  warnWhenUnsavedChanges: true,
-                  projectId: "flNgGT-n3Xi9y-tuG8vb",
-                }}
-              >
-                {renderComponent()}
-                <RefineKbar />
-                <UnsavedChangesNotifier />
-                <DocumentTitleHandler />
-              </Refine>
-              <DevtoolsPanel />
-            </DevtoolsProvider>
-          </RefineSnackbarProvider>
-        </ColorModeContextProvider>
-      </RefineKbarProvider>
-    </>
-  );
+  return <>
+    {/* <GitHubBanner /> */}
+    <RefineKbarProvider>
+      <ColorModeContextProvider>
+        <CssBaseline />
+        <GlobalStyles styles={{ html: { WebkitFontSmoothing: "auto" } }} />
+        <RefineSnackbarProvider>
+          <DevtoolsProvider>
+            <Refine
+              routerProvider={routerProvider}
+              dataProvider={customDataProvider(API_URL)}
+              notificationProvider={notificationProvider}
+              authProvider={authProvider}
+              i18nProvider={i18nProvider}
+              options={{
+                syncWithLocation: true,
+                warnWhenUnsavedChanges: true,
+                projectId: "flNgGT-n3Xi9y-tuG8vb",
+              }}
+              resources={[{
+                name: "users",
+                list: "/users",
+                create: "/users/create",
+                edit: "/users/edit/:id",
+                show: "/users/show/:id",
+                meta: {
+                  api: 'admin/users'
+                }
+              }]}>
+              {renderComponent()}
+              <RefineKbar />
+              <UnsavedChangesNotifier />
+              <DocumentTitleHandler />
+            </Refine>
+            <DevtoolsPanel />
+          </DevtoolsProvider>
+        </RefineSnackbarProvider>
+      </ColorModeContextProvider>
+    </RefineKbarProvider>
+  </>;
 }
 
 export default appWithTranslation(MyApp);
