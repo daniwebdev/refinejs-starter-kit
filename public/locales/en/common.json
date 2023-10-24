@@ -168,10 +168,10 @@
       "createdAt": "Created At"
     },
     "titles": {
-      "create": "Create Category",
-      "edit": "Edit Category",
-      "list": "Categories",
-      "show": "Show Category"
+      "create": "Create User",
+      "edit": "Edit User",
+      "list": "Users",
+      "show": "Show User"
     }
   }
 }

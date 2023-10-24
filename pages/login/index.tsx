@@ -24,15 +24,15 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     "common",
   ]);
 
-  // if (authenticated) {
-  //   return {
-  //     props: {},
-  //     redirect: {
-  //       destination: redirectTo ?? "/",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  if (authenticated) {
+    return {
+      props: {},
+      redirect: {
+        destination: redirectTo ?? "/home",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {

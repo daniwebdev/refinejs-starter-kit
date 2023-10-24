@@ -1,25 +1,20 @@
-import { Button, ButtonGroup, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useMany, useTable, useTranslate } from "@refinedev/core";
-import { Breadcrumb, DateField, DeleteButton, EditButton, List, MarkdownField, ShowButton, Title, useDataGrid } from "@refinedev/mui";
-import Link from "next/link";
+import { DateField, EditButton, List, ShowButton, useDataGrid } from "@refinedev/mui";
 import React from "react";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-
-type IUser = {
-    id: string;
-    name: string;
-    email: string;
-};
+import { IUser } from "src/interfaces";
 
 export default function UserList() {
     const t = useTranslate();
 
     const { dataGridProps } = useDataGrid();
 
-    const { data: userData, isLoading: categoryIsLoading } = useMany({
+
+    const { data: userData } = useMany({
         resource: "users",
         ids: dataGridProps?.rows?.map((item: any) => item?.category?.id) ?? [],
         queryOptions: {
@@ -39,6 +34,11 @@ export default function UserList() {
             {
                 field: "name",
                 headerName: "Name",
+                minWidth: 200,
+            },
+            {
+                field: "username",
+                headerName: "Username",
                 minWidth: 200,
             },
             {
@@ -65,19 +65,25 @@ export default function UserList() {
             {
                 field: "actions",
                 headerName: "Actions",
+                disableColumnMenu: true,
+                // width: 200,
                 renderCell: function render ({value, row}) {
-                    return <ShowButton recordItemId={row.id}>{t('buttons.show')}</ShowButton>
+                    return (
+                        <Stack direction={'row'}>
+                            <ShowButton hideText recordItemId={row.id}>{t('buttons.show')}</ShowButton>
+                            <EditButton hideText recordItemId={row.id}>{t('buttons.edit')}</EditButton>
+                        </Stack>
+                    )
                 }
             }
         ],
         [userData?.data],
     );
 
-
-
     const {
         tableQueryResult: { data, isLoading },
     } = useTable<IUser>();
+
 
     const tableData = data?.data;
 

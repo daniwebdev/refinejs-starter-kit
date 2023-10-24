@@ -1,7 +1,8 @@
 import { DataProvider } from "@refinedev/core";
 import { BaseRecord, CreateManyParams, CreateManyResponse, CreateParams, CreateResponse, CustomParams, CustomResponse, DeleteManyParams, DeleteManyResponse, DeleteOneParams, DeleteOneResponse, GetListParams, GetListResponse, GetManyParams, GetManyResponse, GetOneParams, GetOneResponse, HttpError, IDataContextProvider, UpdateManyParams, UpdateManyResponse, UpdateParams, UpdateResponse } from "@refinedev/core/dist/interfaces";
 import { stringify } from "query-string";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import React from "react";
 
 // Error handling with axios interceptors
 const axiosInstance = axios.create({
@@ -53,18 +54,46 @@ export const customDataProvider = (apiUrl: string): DataProvider => ({
         };
     },
 
-    create: async ({ resource, variables }) => {
-        const url = `${apiUrl}/${resource}`;
+    create: async ({ resource, variables, meta }) => {
+        // const url = `${apiUrl}/${resource}`;
+        try {
+            const url = `${apiUrl}/${meta?.api}`;
 
-        const { data } = await axiosInstance.post(url, variables);
+            const { data } = await axiosInstance.post(url, variables);
+            
+    
+            return {
+                data,
+            };
+        } catch (error) {
+            
+            const err = error as AxiosError
+            const response = err.response ?? undefined;
 
-        return {
-            data,
-        };
+            if(response == undefined) {
+                return {
+                    data: {}
+                };
+            }
+
+            let message = "";
+    
+            for(let m of response.data.error ?? []) {
+                message += m + "\n";
+            }
+            
+            const e: HttpError = {
+                message: message.trim(),
+                statusCode: response.status,
+            };
+            return Promise.reject(e);
+        }
     },
 
-    update: async ({ resource, id, variables }) => {
-        const url = `${apiUrl}/${resource}/${id}`;
+    update: async ({ resource, id, variables, meta }) => {
+        // const url = `${apiUrl}/${resource}/${id}`;
+        const url = `${apiUrl}/${meta?.api}/${id}`;
+
 
         const { data } = await axiosInstance.patch(url, variables);
 
@@ -73,8 +102,9 @@ export const customDataProvider = (apiUrl: string): DataProvider => ({
         };
     },
 
-    deleteOne: async ({ resource, id, variables }) => {
-        const url = `${apiUrl}/${resource}/${id}`;
+    deleteOne: async ({ resource, id, variables, meta }) => {
+        // const url = `${apiUrl}/${resource}/${id}`;
+        const url = `${apiUrl}/${meta?.api}/${id}`;
 
         const { data } = await axiosInstance.delete(url, {
             data: variables,
@@ -87,6 +117,10 @@ export const customDataProvider = (apiUrl: string): DataProvider => ({
 
     getOne: async ({ resource, id, meta }) => {
         // const url = `${apiUrl}/${resource}/${id}`;
+        if(id == undefined) return {
+            data: {}
+        };
+        
         const url = `${apiUrl}/${meta?.api}/${id}`;
 
         const { data } = await axiosInstance.get(url);

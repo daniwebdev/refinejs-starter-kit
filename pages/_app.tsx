@@ -80,7 +80,8 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                 edit: "/users/edit/:id",
                 show: "/users/show/:id",
                 meta: {
-                  api: 'admin/users'
+                  api: 'admin/users',
+                  canDelete: true,
                 }
               }]}>
               {renderComponent()}
