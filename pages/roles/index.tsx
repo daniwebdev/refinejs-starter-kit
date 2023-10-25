@@ -10,12 +10,13 @@ import { IUser } from "src/interfaces";
 
 export default function UserList() {
     const t = useTranslate();
+    const resourceName = 'roles';
 
     const { dataGridProps } = useDataGrid();
 
 
-    const { data: userData } = useMany({
-        resource: "users",
+    const { data: listData } = useMany({
+        resource: resourceName,
         ids: dataGridProps?.rows?.map((item: any) => item?.category?.id) ?? [],
         queryOptions: {
             enabled: !!dataGridProps?.rows,
@@ -34,22 +35,19 @@ export default function UserList() {
             {
                 field: "name",
                 headerName: "Name",
-                minWidth: 200,
+                type: "string",
+                minWidth: 120,
             },
             {
-                field: "username",
-                headerName: "Username",
-                minWidth: 200,
-            },
-            {
-                field: "email",
-                headerName: "Email",
-                minWidth: 250,
+                field: "description",
+                headerName: "Description",
+                type: "string",
+                minWidth: 120,
             },
             {
                 field: "updated_at",
                 headerName: "Updated At",
-                minWidth: 200,
+                minWidth: 250,
                 renderCell: function render({ value }) {
                     return <DateField value={value} />;
                 },
@@ -57,7 +55,7 @@ export default function UserList() {
             {
                 field: "created_at",
                 headerName: "Created At",
-                minWidth: 200,
+                minWidth: 250,
                 renderCell: function render({ value }) {
                     return <DateField value={value} />;
                 },
@@ -77,7 +75,7 @@ export default function UserList() {
                 }
             }
         ],
-        [userData?.data],
+        [listData?.data],
     );
 
     const {
@@ -90,8 +88,8 @@ export default function UserList() {
     return (
         <List 
         createButtonProps={{ size: "small" }}
-        resource="users" title={<div>
-            <h2 style={{ margin: '0px', }}>{t('users.users')}</h2>
+        resource={resourceName} title={<div>
+            <h2 style={{ margin: '0px', }}>{t('roles.titles.list')}</h2>
             <p style={{ margin: '0', fontSize: '1rem' }}>Lorem ipsum dolor sit amet.</p>
         </div>}>
             <DataGrid {...dataGridProps} columns={columns} autoHeight />

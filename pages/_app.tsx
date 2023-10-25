@@ -73,17 +73,30 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                 warnWhenUnsavedChanges: true,
                 projectId: "flNgGT-n3Xi9y-tuG8vb",
               }}
-              resources={[{
-                name: "users",
-                list: "/users",
-                create: "/users/create",
-                edit: "/users/edit/:id",
-                show: "/users/show/:id",
-                meta: {
-                  api: 'admin/users',
-                  canDelete: true,
-                }
-              }]}>
+              resources={[
+                {
+                  name: "users",
+                  list: "/users",
+                  create: "/users/create",
+                  edit: "/users/edit/:id",
+                  show: "/users/show/:id",
+                  meta: {
+                    api: 'admin/users',
+                    canDelete: true,
+                  }
+                },
+                {
+                  name: "roles",
+                  list: "/roles",
+                  create: "/roles/create",
+                  edit: "/roles/edit/:id",
+                  show: "/roles/show/:id",
+                  meta: {
+                    api: 'admin/roles',
+                    canDelete: true,
+                  }
+                },
+              ]}>
               {renderComponent()}
               <RefineKbar />
               <UnsavedChangesNotifier />
