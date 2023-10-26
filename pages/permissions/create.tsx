@@ -32,7 +32,7 @@ const FormCreate: React.FC<IResourceComponentsProps> = () => {
                 autoComplete="off"
             >
                 <Grid container spacing={3}>
-                    <Grid item xs={6}>
+                    <Grid item md={4}>
                         <TextField
                             id="name"
                             {...register("name", {
@@ -47,9 +47,24 @@ const FormCreate: React.FC<IResourceComponentsProps> = () => {
                             autoFocus
                         />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item md={4}>
                         <TextField
                             id="key"
+                            {...register("path", {
+                                required: "This field is required",
+                            })}
+                            error={!!errors.path}
+                            helperText={errors.path?.message}
+                            margin="normal"
+                            fullWidth
+                            label="Path"
+                            name="path"
+                            autoFocus
+                        />
+                    </Grid>
+                    <Grid item md={4}>
+                        <TextField
+                            id="action"
                             {...register("path", {
                                 required: "This field is required",
                             })}
@@ -66,7 +81,7 @@ const FormCreate: React.FC<IResourceComponentsProps> = () => {
                 <TextField
                     id="description"
                     {...register("description", {
-                        required: "This field is required",
+
                     })}
                     error={!!errors.description}
                     helperText={errors.description?.message}

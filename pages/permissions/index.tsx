@@ -17,7 +17,7 @@ export default function UserList() {
 
     const { data: listData } = useMany({
         resource: resourceName,
-        ids: dataGridProps?.rows?.map((item: any) => item?.category?.id) ?? [],
+        ids: dataGridProps?.rows?.map((item: any) => item?.permissions?.id) ?? [],
         queryOptions: {
             enabled: !!dataGridProps?.rows,
         },
@@ -89,7 +89,7 @@ export default function UserList() {
         <List 
         createButtonProps={{ size: "small" }}
         resource={resourceName} title={<div>
-            <h2 style={{ margin: '0px', }}>{t('roles.titles.list')}</h2>
+            <h2 style={{ margin: '0px', }}>{t(`${resourceName}.titles.list`)}</h2>
             <p style={{ margin: '0', fontSize: '1rem' }}>Lorem ipsum dolor sit amet.</p>
         </div>}>
             <DataGrid {...dataGridProps} columns={columns} autoHeight />
