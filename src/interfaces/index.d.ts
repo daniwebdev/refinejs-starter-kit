@@ -18,7 +18,7 @@ type IPermission = {
     id: string;
     name: string;
     path: string;
-    action: string;
+    actions: string[];
     description: string;
 }
 
