@@ -14,6 +14,14 @@ type IRole = {
     description: string;
 }
 
+type IPermission = {
+    id: string;
+    name: string;
+    path: string;
+    action: string;
+    description: string;
+}
+
 export type Nullable<T> = {
     [P in keyof T]: T[P] | null;
 };
