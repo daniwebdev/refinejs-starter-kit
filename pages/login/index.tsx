@@ -2,16 +2,22 @@ import { AuthPage } from "@refinedev/mui";
 
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Head from "next/head";
 import { authProvider } from "src/authProvider";
 
 export default function Login() {
   return (
-    <AuthPage
-      type="login"
-      formProps={{
-        // defaultValues: { email: "demo@refine.dev", password: "demodemo" },
-      }}
-    />
+    <>
+      <Head>
+        <title>Login | Starter Kit</title>
+      </Head>
+      <AuthPage
+        type="login"
+        formProps={{
+          // defaultValues: { email: "demo@refine.dev", password: "demodemo" },
+        }}
+      />
+    </>
   );
 }
 
