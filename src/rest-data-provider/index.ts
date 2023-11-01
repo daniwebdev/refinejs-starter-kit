@@ -1,5 +1,5 @@
 import { DataProvider } from "@refinedev/core";
-import { axiosInstance, generateSort, generateFilter } from "./utils";
+import { axiosInstance, generateSort, generateFilter } from "../utils";
 import { AxiosInstance } from "axios";
 import { stringify } from "query-string";
 

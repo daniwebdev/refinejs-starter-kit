@@ -1,7 +1,16 @@
 import { HttpError } from "@refinedev/core";
 import axios from "axios";
 
-const axiosInstance = axios.create();
+
+const API_URL = "http://localhost:8611";
+
+
+const axiosInstance = axios.create({
+  headers: {
+    'x-api-key': 'sandbox',
+  },
+  baseURL: API_URL
+});
 
 axiosInstance.interceptors.response.use(
   (response) => {
@@ -18,4 +27,4 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export { axiosInstance };
+export { axiosInstance, API_URL };

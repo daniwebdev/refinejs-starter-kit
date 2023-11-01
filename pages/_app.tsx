@@ -1,4 +1,4 @@
-import { GitHubBanner, Refine } from "@refinedev/core";
+import { GitHubBanner, Refine, useCustom } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 import {
@@ -22,11 +22,12 @@ import dataProvider from "@refinedev/simple-rest";
 import { appWithTranslation, useTranslation } from "next-i18next";
 import { authProvider } from "src/authProvider";
 import { customDataProvider } from "src/dataProvider";
-import { newEnforcer } from "casbin";
+import { StringAdapter, newEnforcer } from "casbin";
 import { model, adapter } from "src/accessControl";
+import { API_URL, axiosInstance } from "src/utils/axios";
 
 
-const API_URL = "http://localhost:8611";
+// const API_URL = "http://localhost:8611";
 // const API_URL = "https://api.fake-rest.refine.dev";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -39,9 +40,7 @@ type AppPropsWithLayout = AppProps & {
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
   const role = "admin";
-
-  console.log(nookies.get(null, "auth"));
-
+  let permissionAdapter: any = null;
 
   const renderComponent = () => {
     if (Component.noLayout) {
@@ -79,9 +78,16 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               i18nProvider={i18nProvider}
               accessControlProvider={{
                 can: async ({ action, params, resource }) => {
+                    if(permissionAdapter == null) {
+                      const { data } = (await axiosInstance.get('/misc/permissions'));
+
+                      permissionAdapter = data.trim()
+                    }
+
                     const enforcer = await newEnforcer(
                         model,
-                        adapter,
+                        // adapter,
+                        new StringAdapter(permissionAdapter),
                     );
                     if (
                         action === "delete" ||
