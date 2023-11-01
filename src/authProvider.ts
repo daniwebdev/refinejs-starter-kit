@@ -1,28 +1,53 @@
-import { AuthBindings } from "@refinedev/core";
+import { AuthBindings, useCustom } from "@refinedev/core";
 import nookies from "nookies";
+import axios, { AxiosError } from "axios";
+import { customDataProvider } from "./dataProvider";
 
-const mockUsers = [
-  {
-    name: "John Doe",
-    email: "johndoe@mail.com",
-    roles: ["admin"],
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-  {
-    name: "Jane Doe",
-    email: "janedoe@mail.com",
-    roles: ["editor"],
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-];
+
+const signIn = async (email: string, password: string)  => {
+  const client = axios.create({
+    headers: {
+      "x-api-key": "sandbox"
+    }
+  });
+const API_URL = "http://localhost:8611";
+  return client.post(API_URL + "/auth/login", {
+    "identity": email,
+    "password": password,
+    "device": {
+      "id": "we7r12i",
+      "name": "Iphone 14 Pro Max",
+      "brand": "Apple",
+      "os": "iOS 17"
+    }
+  }).then(res => res.data.data)
+}
 
 export const authProvider: AuthBindings = {
   login: async ({ email, username, password, remember }) => {
     // Suppose we actually send a request to the back end here.
-    const user = mockUsers[0];
+    let user = null;
+
+    try {
+      user = (await signIn(email, password));
+
+    } catch (error) {
+      
+      return {
+        success: false,
+        error: {
+          name: "LoginError",
+          message: "Invalid username or password",
+        },
+      }
+    }
 
     if (user) {
-      nookies.set(null, "auth", JSON.stringify(user), {
+      nookies.set(null, "auth", JSON.stringify(user.user), {
+        maxAge: 30 * 24 * 60 * 60,
+        path: "/",
+      });
+      nookies.set(null, "token", JSON.stringify(user.token), {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
       });
