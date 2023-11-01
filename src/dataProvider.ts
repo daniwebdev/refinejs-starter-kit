@@ -3,10 +3,26 @@
 */
 
 import { DataProvider } from "@refinedev/core";
-import { BaseRecord, CreateManyParams, CreateManyResponse, CreateParams, CreateResponse, CustomParams, CustomResponse, DeleteManyParams, DeleteManyResponse, DeleteOneParams, DeleteOneResponse, GetListParams, GetListResponse, GetManyParams, GetManyResponse, GetOneParams, GetOneResponse, HttpError, IDataContextProvider, UpdateManyParams, UpdateManyResponse, UpdateParams, UpdateResponse } from "@refinedev/core/dist/interfaces";
+import { BaseRecord, CreateManyParams, CreateManyResponse, CreateParams, CreateResponse, CrudFilters, CustomParams, CustomResponse, DeleteManyParams, DeleteManyResponse, DeleteOneParams, DeleteOneResponse, GetListParams, GetListResponse, GetManyParams, GetManyResponse, GetOneParams, GetOneResponse, HttpError, IDataContextProvider, UpdateManyParams, UpdateManyResponse, UpdateParams, UpdateResponse } from "@refinedev/core/dist/interfaces";
 import { stringify } from "query-string";
 import axios, { AxiosError } from "axios";
 import React from "react";
+import { mapOperator } from "@refinedev/simple-rest";
+
+
+const generateFilters = (filters?: CrudFilters) => {
+    const queryFilters: { [key: string]: string } = {};
+
+    filters?.map((filter): void => {
+    if ("field" in filter) {
+        const { field, operator, value } = filter;
+        const mappedOperator = mapOperator(operator);
+        queryFilters[`${field}${mappedOperator}`] = value;
+    }
+    });
+
+    return queryFilters;
+};
 
 // Error handling with axios interceptors
 const axiosInstance = axios.create({
@@ -136,4 +152,58 @@ export const customDataProvider = (apiUrl: string): DataProvider => ({
 
     getApiUrl: () => apiUrl,
 
+    custom: async ({
+        url,
+        method,
+        filters,
+        sorters,
+        payload,
+        query,
+        headers,
+    }) => {
+        let requestUrl = `${url}?`;
+
+        if (sorters && sorters.length > 0) {
+            const sortQuery = {
+                _sort: sorters[0].field,
+                _order: sorters[0].order,
+            };
+            requestUrl = `${requestUrl}&${stringify(sortQuery)}`;
+        }
+
+        if (filters) {
+            const filterQuery = generateFilters(filters);
+            requestUrl = `${requestUrl}&${stringify(filterQuery)}`;
+        }
+
+        if (query) {
+            requestUrl = `${requestUrl}&${stringify(query)}`;
+        }
+
+        let axiosResponse;
+        switch (method) {
+            case "put":
+            case "post":
+            case "patch":
+                axiosResponse = await axiosInstance[method](url, payload, {
+                    headers,
+                });
+                break;
+            case "delete":
+                axiosResponse = await axiosInstance.delete(url, {
+                    data: payload,
+                    headers: headers,
+                });
+                break;
+            default:
+                axiosResponse = await axiosInstance.get(requestUrl, {
+                    headers,
+                });
+                break;
+        }
+
+        const { data } = axiosResponse;
+
+        return { data };
+    },
 });

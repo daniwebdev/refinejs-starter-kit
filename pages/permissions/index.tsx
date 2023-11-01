@@ -36,13 +36,13 @@ export default function UserList() {
                 field: "name",
                 headerName: "Name",
                 type: "string",
-                minWidth: 120,
-            },
-            {
-                field: "description",
-                headerName: "Description",
-                type: "string",
-                minWidth: 120,
+                minWidth: 250,
+                renderCell(params) {
+                    return <>
+                    <span>{params.value}</span>
+                    <p>{params.row.description}</p>
+                    </>;
+                },
             },
             {
                 field: "updated_at",

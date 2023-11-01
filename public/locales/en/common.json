@@ -187,6 +187,9 @@
       "edit": "Edit Role",
       "list": "Roles",
       "show": "Show Role"
+    },
+    "buttons": {
+      "assignments": "Assign"
     }
   },
   "permissions": {
