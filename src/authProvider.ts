@@ -42,12 +42,15 @@ export const authProvider: AuthBindings = {
       }
     }
 
+    const userData = {
+      ...user.user,
+      tokens: user.tokens,
+    }
+
+    console.log(userData);
+
     if (user) {
-      nookies.set(null, "auth", JSON.stringify(user.user), {
-        maxAge: 30 * 24 * 60 * 60,
-        path: "/",
-      });
-      nookies.set(null, "token", JSON.stringify(user.token), {
+      nookies.set(null, "auth", JSON.stringify(userData), {
         maxAge: 30 * 24 * 60 * 60,
         path: "/",
       });

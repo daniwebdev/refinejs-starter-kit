@@ -1,13 +1,14 @@
 import { HttpError } from "@refinedev/core";
 import axios from "axios";
+import { getAuthToken } from "./helpers";
 
 
 const API_URL = "http://localhost:8611";
 
-
 const axiosInstance = axios.create({
   headers: {
     'x-api-key': 'sandbox',
+    'authorization': `Bearer ${getAuthToken()}`
   },
   baseURL: API_URL
 });

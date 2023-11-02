@@ -83,19 +83,6 @@ return (
 
             <Grid container spacing={2}>
                 <Grid item xs={6}>
-                    {/* <TextField
-                        id="password"
-                        {...register("password", {
-                            required: "This field is required",
-                        })}
-                        type="password"
-                        error={!!errors.password}
-                        helperText={errors.password?.message}
-                        margin="normal"
-                        fullWidth
-                        label="Password"
-                        name="password"
-                    /> */}
                     <FormControl variant="outlined"  sx={{ mt: 2, width: '100%' }} >
                         <InputLabel htmlFor="password">Password</InputLabel>
                         <OutlinedInput
@@ -123,128 +110,33 @@ return (
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                    {/* <TextField
-                        id="confirmPassword"
-                        {...register("confirmPassword", {
-                            required: "This field is required",
-                        })}
-                        error={!!errors.confirmPassword}
-                        helperText={errors.confirmPassword?.message}
-                        margin="normal"
-                        fullWidth
-                        type="password"
-                        label="Confirm Password"
-                        name="confirmPassword"
-                    /> */}
-                        <FormControl variant="outlined"  sx={{ mt: 2, width: '100%' }} >
-                            <InputLabel htmlFor="password">Confirm Password</InputLabel>
-                            <OutlinedInput
-                                id="confirmPassword"
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                error={!!errors.confirmPassword}
-                                {...register("confirmPassword", {
-                                    required: "This field is required",
-                                })}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle Confirm Password visibility"
-                                            onClick={handleClickShowConfirmPassword}
-                                            onMouseDown={handleMouseDownConfirmPassword}
-                                            edge="end"
-                                        >
-                                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                                label="Confirm Password"
-                                name="confirmPassword"
-                            />
-                        </FormControl>
+                    <FormControl variant="outlined"  sx={{ mt: 2, width: '100%' }} >
+                        <InputLabel htmlFor="password">Confirm Password</InputLabel>
+                        <OutlinedInput
+                            id="confirmPassword"
+                            type={showConfirmPassword ? 'text' : 'password'}
+                            error={!!errors.confirmPassword}
+                            {...register("confirmPassword", {
+                                required: "This field is required",
+                            })}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle Confirm Password visibility"
+                                        onClick={handleClickShowConfirmPassword}
+                                        onMouseDown={handleMouseDownConfirmPassword}
+                                        edge="end"
+                                    >
+                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Confirm Password"
+                            name="confirmPassword"
+                        />
+                    </FormControl>
                 </Grid>
             </Grid>
-            {/* <Controller
-                control={control}
-                name="status"
-                rules={{ required: "This field is required" }}
-                // eslint-disable-next-line
-                defaultValue={null as any}
-                render={({ field }) => (
-                    <Autocomplete<IStatus>
-                        id="status"
-                        {...field}
-                        options={["published", "draft", "rejected"]}
-                        onChange={(_, value) => {
-                            field.onChange(value);
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Status"
-                                margin="normal"
-                                variant="outlined"
-                                error={!!errors.status}
-                                helperText={errors.status?.message}
-                                required
-                            />
-                        )}
-                    />
-                )}
-            />
-            <Controller
-                control={control}
-                name="category"
-                rules={{ required: "This field is required" }}
-                // eslint-disable-next-line
-                defaultValue={null as any}
-                render={({ field }) => (
-                    <Autocomplete<ICategory>
-                        id="category"
-                        {...autocompleteProps}
-                        {...field}
-                        onChange={(_, value) => {
-                            field.onChange(value);
-                        }}
-                        getOptionLabel={(item) => {
-                            return (
-                                autocompleteProps?.options?.find(
-                                    (p) =>
-                                        p?.id?.toString() ===
-                                        item?.id?.toString(),
-                                )?.title ?? ""
-                            );
-                        }}
-                        isOptionEqualToValue={(option, value) =>
-                            value === undefined ||
-                            option?.id?.toString() ===
-                                (value?.id ?? value)?.toString()
-                        }
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Category"
-                                margin="normal"
-                                variant="outlined"
-                                error={!!errors.category}
-                                helperText={errors.category?.message}
-                                required
-                            />
-                        )}
-                    />
-                )}
-            />
-            <TextField
-                id="content"
-                {...register("content", {
-                    required: "This field is required",
-                })}
-                error={!!errors.content}
-                helperText={errors.content?.message}
-                margin="normal"
-                label="Content"
-                multiline
-                rows={4}
-            /> */}
         </Box>
     </Create>
 );

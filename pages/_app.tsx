@@ -89,6 +89,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                         // adapter,
                         new StringAdapter(permissionAdapter),
                     );
+                    
                     if (
                         action === "delete" ||
                         action === "edit" ||
