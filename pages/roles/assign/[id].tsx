@@ -13,11 +13,14 @@ import { axiosInstance } from "src/utils";
 
 const AssignPermissionToRole = () => {
     const router = useRouter()
-    const [rows, setRows] = React.useState<IPermission[]>([])
     const apiURL = useApiUrl()
+
     const { dataGridProps } = useDataGrid();
     const { open } = useNotification();
 
+    const [rows, setRows] = React.useState<IPermission[]>([])
+    const [rowSelectionModel, setRowSelectionModel] = React.useState<GridRowSelectionModel>([]);
+    const [isInitialize, setIsInitialize] = React.useState<boolean>(() => false);
 
     const { data: permissionData, isLoading: permissionsIsLoading } = useCustom({
         url: `${apiURL}/admin/permissions`,
@@ -70,30 +73,52 @@ const AssignPermissionToRole = () => {
     );
 
     React.useEffect(() => {
+
         if(permissionData?.data) {
             setRows(permissionData?.data as IPermission[])
         }
-    })
+    
+        console.log('test')
+        
+        if(!isInitialize) {
+            axiosInstance.get(`admin/roles/${router.query.id}/permissions`).then(async (response) => {
+                console.log(response.data.map((item: any) => item.permission.id))
+                if(response.data.length) {
+                    setRowSelectionModel(response.data.map((item: any) => item.permission.id) as GridRowSelectionModel);
+                    // rowSelectionModel.push(...response.data.map((item: any) => item.permission.id))
+                }
+                setIsInitialize(true);
+                console.log('k')
+            });
+        }
 
-    const onSelectionModelChange = (rowSelectionModel: GridRowSelectionModel, details: GridCallbackDetails): void => {
-        axiosInstance.patch(`/admin/roles/${router.query.id}/assign`, {
-            ids: rowSelectionModel,
-        }).then(() => {
-            open?.({
-                type: "success",
-                message: "Hey",
-                description: "I <3 Refine",
-                key: "unique-id",
-            });
-        }).catch((e) => {
-            open?.({
-                type: "error",
-                message: "Error",
-                description: "I <3 Refine",
-                key: "unique-id",
-            });
-        })
-    }
+        // setRowSelectionModel([] as GridRowSelectionModel);
+
+    }, [permissionData]);
+
+    React.useEffect(() => {
+
+        if(isInitialize) {
+            axiosInstance.patch(`/admin/roles/${router.query.id}/assign`, {
+                ids: rowSelectionModel,
+            }).then(() => {
+                open?.({
+                    type: "success",
+                    message: "Hey",
+                    description: "I <3 Refine",
+                    key: "unique-id",
+                });
+            }).catch((e) => {
+                open?.({
+                    type: "error",
+                    message: "Error",
+                    description: "I <3 Refine",
+                    key: "unique-id",
+                });
+            })
+        }
+    }, [rowSelectionModel]);
+
 
     return (
         <>
@@ -115,7 +140,15 @@ const AssignPermissionToRole = () => {
                     </div>
                 </Box>
                 <Box width={'100%'}>
-                    <DataGrid {...dataGridProps} rows={rows} loading={permissionsIsLoading} checkboxSelection columns={columns} autoHeight onRowSelectionModelChange={onSelectionModelChange} />
+                    <DataGrid 
+                    rows={rows} 
+                    checkboxSelection
+                    rowSelectionModel={rowSelectionModel} 
+                    loading={!isInitialize}
+                    columns={columns} 
+                    autoHeight 
+                    onRowSelectionModelChange={setRowSelectionModel}
+                     />
                 </Box>
             </Box>
         </>
