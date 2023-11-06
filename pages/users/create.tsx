@@ -1,15 +1,15 @@
 
-import { HttpError, IResourceComponentsProps, useShow } from "@refinedev/core";
+import { HttpError, IResourceComponentsProps, useSelect, useShow } from "@refinedev/core";
 import { Show } from "@components/crud/show";
-import { Box, TextField, Grid, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
+import { Box, TextField, Grid, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Autocomplete, Select, MenuItem } from '@mui/material'
 import { UsersShow } from "@components/users";
 import UserList from "..";
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { Create } from "@refinedev/mui";
+import { Create, useAutocomplete } from "@refinedev/mui";
 import { Controller } from "react-hook-form";
 import { useForm } from "@refinedev/react-hook-form";
-import { IUser, Nullable } from "src/interfaces";
+import { IRole, IUser, Nullable } from "src/interfaces";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import React from "react";
 
@@ -22,6 +22,13 @@ const UserCreate: React.FC<IResourceComponentsProps> = () => {
     control,
     formState: { errors },
 } = useForm<IUser, HttpError, Nullable<IUser>>();
+
+const { options } = useSelect<IRole>({
+    resource: "roles",
+    optionLabel: 'name',
+    optionValue: 'id',
+});
+
 
 const [showPassword, setShowPassword] = React.useState(false);
 const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -134,6 +141,25 @@ return (
                             label="Confirm Password"
                             name="confirmPassword"
                         />
+                    </FormControl>
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControl fullWidth>
+                        <InputLabel id="user-role_id-label">Choose Role</InputLabel>
+                        <Select
+                            labelId="user-role_id-label"
+                            id="user-role_id"
+                            label="Role"
+                            {...register("role_id", {
+                                required: "This field is required",
+                            })}
+                        >
+                            {
+                                options.map((option) => (
+                                    <MenuItem value={option.value}>{option.label}</MenuItem>
+                                ))
+                            }
+                        </Select>
                     </FormControl>
                 </Grid>
             </Grid>

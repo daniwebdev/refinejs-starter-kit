@@ -4,6 +4,7 @@ type IUser = {
     username: string;
     email: string;
     password: string;
+    role_id: number;
     confirmPassword: string;
 };
 
