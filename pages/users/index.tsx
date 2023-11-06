@@ -68,7 +68,7 @@ export default function UserList() {
                 headerName: "Actions",
                 disableColumnMenu: true,
                 // width: 200,
-                renderCell: function render ({value, row}) {
+                renderCell: function render({ value, row }) {
                     return (
                         <Stack direction={'row'}>
                             <ShowButton hideText recordItemId={row.id}>{t('buttons.show')}</ShowButton>
@@ -89,12 +89,12 @@ export default function UserList() {
     const tableData = data?.data;
 
     return (
-        <List 
-        createButtonProps={{ size: "small" }}
-        resource="users" title={<div>
-            <h2 style={{ margin: '0px', }}>{t('users.users')}</h2>
-            <p style={{ margin: '0', fontSize: '1rem' }}>Lorem ipsum dolor sit amet.</p>
-        </div>}>
+        <List
+            createButtonProps={{ size: "small" }}
+            resource="users" title={<div>
+                <h2 style={{ margin: '0px', }}>{t('users.users')}</h2>
+                <p style={{ margin: '0', fontSize: '1rem' }}>Lorem ipsum dolor sit amet.</p>
+            </div>}>
             <DataGrid {...dataGridProps} columns={columns} autoHeight />
         </List>
     );
@@ -102,17 +102,17 @@ export default function UserList() {
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-      const { authenticated, redirectTo } = await authProvider.check(context);
+    const { authenticated, redirectTo } = await authProvider.check(context);
 
     if (!authenticated) {
         return {
-          props: {},
-          redirect: {
-            destination: redirectTo ?? '/login',
-            permanent: false,
-          },
+            props: {},
+            redirect: {
+                destination: redirectTo ?? '/login',
+                permanent: false,
+            },
         };
-      }
+    }
 
     const translateProps = await serverSideTranslations(
         context.locale ?? "en",

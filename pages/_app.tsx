@@ -81,8 +81,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     if(permissionAdapter == null) {
                       const { data } = (await axiosInstance.get('/misc/permissions'));
 
-                      permissionAdapter = data.casbin_permission_adapter.trim()
-                      currentRole = data.role.trim()
+                      if(data.role != undefined) {
+                        permissionAdapter = data.casbin_permission_adapter.trim()
+                        currentRole = data.role
+                      } else {
+                        permissionAdapter = data.trim()
+                        currentRole = 'admin'
+                      }
                     }
                     
 

@@ -7,6 +7,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { IUser } from "src/interfaces";
+import { authProvider } from "src/authProvider";
 
 export default function UserList() {
     const t = useTranslate();
@@ -40,7 +41,28 @@ export default function UserList() {
                 renderCell(params) {
                     return <>
                     <span>{params.value}</span>
-                    <p>{params.row.description}</p>
+                    </>;
+                },
+            },
+            {
+                field: "path",
+                headerName: "Path",
+                type: "string",
+                minWidth: 250,
+                renderCell(params) {
+                    return <>
+                    <span>{params.value}</span>
+                    </>;
+                },
+            },
+            {
+                field: "actions",
+                headerName: "resource Act.",
+                type: "string",
+                minWidth: 250,
+                renderCell(params) {
+                    return <>
+                    <span>{params.value.join(' | ')}</span>
                     </>;
                 },
             },
@@ -61,7 +83,7 @@ export default function UserList() {
                 },
             },
             {
-                field: "actions",
+                field: "act",
                 headerName: "Actions",
                 disableColumnMenu: true,
                 // width: 200,
@@ -99,6 +121,18 @@ export default function UserList() {
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const { authenticated, redirectTo } = await authProvider.check(context);
+
+    if (!authenticated) {
+        return {
+            props: {},
+            redirect: {
+                destination: redirectTo ?? '/login',
+                permanent: false,
+            },
+        };
+    }
+
     const translateProps = await serverSideTranslations(
         context.locale ?? "en",
         ["common"],

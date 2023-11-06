@@ -10,6 +10,7 @@ import { Edit } from "@refinedev/mui";
 import { Controller } from "react-hook-form";
 import { useForm } from "@refinedev/react-hook-form";
 import { IPermission, IUser, Nullable } from "src/interfaces";
+import { authProvider } from "src/authProvider";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -74,6 +75,8 @@ return (
                                 input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
                             >
                                 <MenuItem key={'list'} value={'list'} >List</MenuItem>
+                                <MenuItem key={'blank'} value={'blank'} >Blank</MenuItem>
+                                <MenuItem key={'show'} value={'show'} >Show</MenuItem>
                                 <MenuItem key={'create'} value={'create'} >Create</MenuItem>
                                 <MenuItem key={'update'} value={'update'} >Update</MenuItem>
                                 <MenuItem key={'delete'} value={'delete'} >Delete</MenuItem>
@@ -102,6 +105,17 @@ export default EditForm
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const { authenticated, redirectTo } = await authProvider.check(context);
+
+    if (!authenticated) {
+        return {
+            props: {},
+            redirect: {
+                destination: redirectTo ?? '/login',
+                permanent: false,
+            },
+        };
+    }
   const translateProps = await serverSideTranslations(
       context.locale ?? "en",
       ["common"],

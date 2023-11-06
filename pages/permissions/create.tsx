@@ -10,6 +10,7 @@ import { useForm } from "@refinedev/react-hook-form";
 import { IPermission, Nullable } from "src/interfaces";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import React from "react";
+import { authProvider } from "src/authProvider";
 
 const actions = [
     'Create',
@@ -90,6 +91,7 @@ const FormCreate: React.FC<IResourceComponentsProps> = () => {
                                 input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
                             >
                                 <MenuItem key={'list'} value={'list'} >List</MenuItem>
+                                <MenuItem key={'show'} value={'show'} >Show</MenuItem>
                                 <MenuItem key={'create'} value={'create'} >Create</MenuItem>
                                 <MenuItem key={'update'} value={'update'} >Update</MenuItem>
                                 <MenuItem key={'delete'} value={'delete'} >Delete</MenuItem>
@@ -118,6 +120,18 @@ export default FormCreate
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+    const { authenticated, redirectTo } = await authProvider.check(context);
+
+    if (!authenticated) {
+        return {
+            props: {},
+            redirect: {
+                destination: redirectTo ?? '/login',
+                permanent: false,
+            },
+        };
+    }
+
     const translateProps = await serverSideTranslations(
         context.locale ?? "en",
         ["common"],
