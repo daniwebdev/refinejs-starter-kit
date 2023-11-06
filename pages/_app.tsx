@@ -39,7 +39,7 @@ type AppPropsWithLayout = AppProps & {
 };
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
-  const role = "admin";
+  let currentRole = "admin";
   let permissionAdapter: any = null;
 
   const renderComponent = () => {
@@ -81,8 +81,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     if(permissionAdapter == null) {
                       const { data } = (await axiosInstance.get('/misc/permissions'));
 
-                      permissionAdapter = data.trim()
+                      permissionAdapter = data.casbin_permission_adapter.trim()
+                      currentRole = data.role.trim()
                     }
+                    
 
                     const enforcer = await newEnforcer(
                         model,
@@ -97,7 +99,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     ) {
                         return Promise.resolve({
                             can: await enforcer.enforce(
-                                role,
+                                currentRole,
                                 `${resource}/${params?.id}`,
                                 action,
                             ),
@@ -106,7 +108,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     if (action === "field") {
                         return Promise.resolve({
                             can: await enforcer.enforce(
-                                role,
+                                currentRole,
                                 `${resource}/${params?.field}`,
                                 action,
                             ),
@@ -114,7 +116,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     }
                     return {
                         can: await enforcer.enforce(
-                            role,
+                            currentRole,
                             resource,
                             action,
                         ),
